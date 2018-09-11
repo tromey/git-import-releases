@@ -70,6 +70,7 @@ cleandir()
 	    .git)
 		;;
 	    *)
+		chmod -R u+w $file
 		rm -rf $file
 		;;
 	esac
