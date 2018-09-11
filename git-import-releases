@@ -4,7 +4,7 @@ set -e
 
 function usage () {
     echo >&$1 \
-        "usage: $0 [-h] [--package-list FILE] [--packages-dir PATH]"
+        "usage: $0 [-h] [--package-list FILE] [--packages-dir PATH] [--url URL]"
 }
 
 function make_absolute()
@@ -19,11 +19,13 @@ function make_absolute()
     esac
 }
 
+url=
 while [ $# -gt 0 ]
 do
     case "$1" in
         --package-list) package_list="$2"; shift ;;
         --packages-dir) packages_dir="$2"; shift ;;
+	--url) url="$2"; shift ;;
         -h)
             usage 1
             exit 0;;
@@ -92,6 +94,10 @@ while read line; do
 
     tag=""
     for file in $line; do
+	if [ -n "$url" ] && [ ! -f "$packages_dir/$file" ]; then
+	    curl "$url/$file" --output "$packages_dir/$file"
+	fi
+
 	case "$file" in
 	    *.tar.bz2)
 		tar jxf "$packages_dir/$file" "$tar_opts";
