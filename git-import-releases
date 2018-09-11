@@ -114,6 +114,12 @@ while read line; do
 		;;
 	esac
 
+	# Some of the files have a second copy of everything inside.
+	if [ -d "$release" ]; then
+	    chmod -R u+w "$release"
+	    rm -rf "$release"
+	fi
+
         # Record author date as the last release on the line's date,
         # and author as the composed tag (the latter to make `git
         # blame' easier to follow).
